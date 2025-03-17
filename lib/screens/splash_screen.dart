@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';  // To access SharedPreferences
+import 'signup_page.dart';
 //import 'homepage.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,6 +19,18 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   String username = '';
+  Future<String> getUsername(String userId) async {
+  DocumentSnapshot snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(userId)  // Assuming userId is stored in SharedPreferences or another source
+      .get();
+
+  if (snapshot.exists) {
+    return snapshot['name'];  // Fetching the 'name' field
+  } else {
+    return 'User not found';
+  }
+}
 
   @override
   void initState() {
@@ -32,15 +49,16 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
+    _loadUser();
 
-  // //   // Navigate to Sign Up Page after 3 seconds
-  //   Timer(const Duration(seconds: 3), () {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => const SignUpPage()),  // You can change this to HomePage or Dashboard if needed
-  //     );
-  //   });
-  // }
+  //   // Navigate to Sign Up Page after 3 seconds
+    Timer(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const SignUpPage()),  // You can change this to HomePage or Dashboard if needed
+      );
+    });
+  }
 
   //  //Navigate to Sign Up Page after 3 seconds
   //   Timer(const Duration(seconds: 3), () {
@@ -51,7 +69,15 @@ class _SplashScreenState extends State<SplashScreen>
   //   });
   // }
 
-  
+  _loadUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userId = prefs.getString('userId') ?? '';  // Get the userId from SharedPreferences
+    if (userId.isNotEmpty) {
+      String userName = await getUsername(userId);  // Fetch the username using the getUsername function
+      setState(() {
+        username = userName;
+      });
+    }
   }
 
   @override
@@ -140,7 +166,15 @@ class _SplashScreenState extends State<SplashScreen>
                           letterSpacing: 1.2,
                         ),
                       ),
-                      
+                      // Display the fetched username if available
+                      if (username.isNotEmpty) 
+                        Text(
+                          'Hello, $username!',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Color.fromARGB(255, 7, 6, 6),
+                          ),
+                        ),
                     ],
                   ),
                 ),
