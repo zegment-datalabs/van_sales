@@ -1,0 +1,2 @@
+D:/git/van_sales/android/app/.cxx/Debug/495o2hk1/x86/CMakeFiles/edit_cache.dir
+D:/git/van_sales/android/app/.cxx/Debug/495o2hk1/x86/CMakeFiles/rebuild_cache.dir
