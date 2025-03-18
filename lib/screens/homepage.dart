@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:van_sales/screens/login_page.dart';
+import 'package:van_sales/widgets/common_widgets.dart';
+import 'package:van_sales/screens/ordermanagement.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   void _logout() async {
     await FirebaseAuth.instance.signOut();
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Clear saved user data
+    await prefs.clear();
 
     Navigator.pushReplacement(
       context,
@@ -42,16 +44,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text('Home', style: TextStyle(color: Colors.white)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white),
-            onPressed: _logout,
-          ),
-        ],
-      ),
+      appBar: CommonAppBar(title: 'Home', onLogout: _logout),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -82,34 +75,21 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 30),
 
             // Navigation Buttons
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to sales or orders page
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.teal,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('View Orders', style: TextStyle(fontSize: 18, color: Colors.white)),
-            ),
+            CommonButton(
+                label: 'Order Management',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const OrderManagementPage()),
+                  );
+                }),
             const SizedBox(height: 10),
 
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to stock management
-              },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                backgroundColor: Colors.teal,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text('Manage Stock', style: TextStyle(fontSize: 18, color: Colors.white)),
-            ),
+            CommonButton(label: 'Substock Summary', onPressed: () {}),
+            const SizedBox(height: 10),
+
+            CommonButton(label: 'Reconcile', onPressed: () {}),
           ],
         ),
       ),
