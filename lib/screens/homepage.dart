@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text('Home', style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text('View Orders', style: TextStyle(fontSize: 18, color: Colors.white)),
+              child: const Text('Order Management', style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
             const SizedBox(height: 10),
 
